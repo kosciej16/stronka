@@ -1,20 +1,37 @@
 <template>
-	<div class="square"></div>
+	<div class="square">
+		<p class="text">{{ name }}</p>
+	</div>
 </template>
 
 <script>
 export default {
-	name: 'Tile',
+	name: "Tile",
 	data() {
 		return {};
+	},
+	props: {
+		name: {
+			type: String,
+			required: true,
+		},
 	},
 };
 </script>
 
 <style scoped>
 .square {
-  height: 50px;
-  width: 50px;
-  background-color: #555;
+	position: relative;
+	height: 6em;
+	width: 6em;
+	border-style: solid;
+}
+.square .text {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -50%);
 }
 </style>
