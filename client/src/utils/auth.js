@@ -1,5 +1,6 @@
 export function signedUser() {
     var user = localStorage.getItem("user")
+    console.log(user)
     if (user) {
         return JSON.parse(user)
     }

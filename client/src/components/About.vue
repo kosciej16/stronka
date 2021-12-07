@@ -7,26 +7,37 @@
 		<Info
 			msg="Aby zapobiec nienawiści w internecie skomplikowany algorytm usuwa słowo . Choć w zasadzie jest on dość glupi... "
 		></Info>
-		<textarea
-			class="user_comment"
-			v-model="user_comment"
-			placeholder="miejsce na Twój osąd"
-		></textarea>
-         <input type="checkbox" id="anonym" v-model=anonym>
-         <label for="anonym">Anonimowo</label>
-
-        <div id="all_comments" v-for="(comment, index) in comments" :key="index">
-		<div class="box">
+		<div v-if="signedUser()">
+			<textarea
+				class="user_comment"
+				v-model="user_comment"
+				placeholder="miejsce na Twój osąd"
+			></textarea>
+			<input type="checkbox" id="anonym" v-model="anonym" />
+			<label for="anonym">Anonimowo</label>
+		</div>
+		<div v-else>
+			<router-link to="/login">Zaloguj się</router-link>, aby móc dodawać opinie
+		</div>
+		<div id="all_comments" v-for="(comment, index) in comments" :key="index">
+			<div class="box">
 				<p class="author">
 					&#128100; {{ comment.anomised }}
-					<span @click="delete_comment(comment.comment_id)" v-if="is_mine(comment.author_name)" class="tick"> usuń </span>
+					<span
+						@click="delete_comment(comment.comment_id)"
+						v-if="is_mine(comment.author_name)"
+						class="tick"
+					>
+						usuń
+					</span>
 				</p>
 				<p class="comment">{{ comment.comment }}</p>
 			</div>
-		<Info v-if="is_mine(comment.author_name)"
-            id="abc"
-			msg="Po co się ograniczać, możesz usunąć dowolny komentarz! Wystarczy wysłać request DELETE na /comment/{comment_id}"
-		></Info>
+			<Info
+				v-if="is_mine(comment.author_name)"
+				id="abc"
+				msg="Po co się ograniczać, możesz usunąć dowolny komentarz! Wystarczy wysłać request DELETE na /comment/{comment_id}"
+			></Info>
 		</div>
 	</div>
 </template>
@@ -42,7 +53,7 @@ export default {
 	},
 	data() {
 		return {
-            anonym: false,
+			anonym: false,
 			comments: [],
 			user_comment: null,
 		};
@@ -51,6 +62,7 @@ export default {
 		this.refresh();
 	},
 	methods: {
+		signedUser,
 		is_mine(author_name) {
 			return signedUser() && author_name === signedUser().username;
 		},
@@ -81,7 +93,7 @@ export default {
 	font-weight: bold;
 }
 .box {
-    float: left;
+	float: left;
 	margin-top: 1em;
 	border-style: solid;
 	width: 30em;
@@ -100,12 +112,12 @@ export default {
 	width: 40em;
 }
 #abc {
-float: left;
-position: relative;
-top: 1.5em
+	float: left;
+	position: relative;
+	top: 1.5em;
 }
 #anonym {
-margin-left: 2em;
-transform: scale(1.5);
+	margin-left: 2em;
+	transform: scale(1.5);
 }
 </style>
