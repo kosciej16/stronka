@@ -22,8 +22,8 @@ export default {
 <style scoped>
 .square {
 	position: relative;
-	height: 6em;
-	width: 6em;
+	height: 6.5em;
+	width: 6.5em;
 	border-style: solid;
 }
 .square .text {
