@@ -12,7 +12,7 @@ import Plansze from './components/Plansze.vue'
 import Ranking from './components/Ranking.vue'
 
 const routes = [
-  { path: '/home', name:'home', component: Home },
+  { path: '/', name:'home', component: Home },
   { path: '/kontakt', name:'kontakt', component: Kontakt },
   { path: '/about', name:'about', component: About },
   { path: '/login', name:'login', component: Login },

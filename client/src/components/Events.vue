@@ -3,7 +3,7 @@
 		<table v-if="events.length" CELLSPACING="0" class="dense">
 			<thead>
 				<tr>
-					<th>Nazwa</th>
+					<th class="cell-small">Nazwa</th>
 					<th class="cell-small">Data</th>
 					<th class="cell-small">Godzina</th>
 					<th class="cell-small">Rodzaj</th>
@@ -14,13 +14,13 @@
 			</thead>
 			<tbody>
 				<tr v-for="(event, index) in events" :key="index">
-					<b><td class="border-left" v-html="event.name" /></b>
+					<td class="cell-small" v-html="event.name" />
 					<td class="cell-small" v-html="getDateStringShort(event.start)" />
 					<td
 						class="cell-small border-left"
 						v-html="getTimeStringShort(event.start)"
 					/>
-					<router-link :to="`/event/${event.type}`">
+					<router-link class="cell-small" id="link" :to="`/event/${event.type}`">
 						<td class="cell-small border-left" v-html="event.type" />
 					</router-link>
 					<td class="cell-small border-left" v-html="signed(event)" />
@@ -100,15 +100,11 @@ th,
 td {
 	border-bottom: none;
 	text-align: left;
+    line-height: 20px;
+
 	padding-left: 16px;
 	padding-right: 16px;
 
-	&:first-child {
-		padding-left: 24px;
-	}
-	&:last-child {
-		padding-right: 24px;
-	}
 }
 td {
 	padding-bottom: 8px;
@@ -117,13 +113,6 @@ td {
 th {
 	color: white;
 	background-image: linear-gradient(to right, #1c481c, #2b5d2a, #1c481c);
-
-	&:first-child {
-		border-radius: 6px 0 0 6px;
-	}
-	&:last-child {
-		border-radius: 0 6px 6px 0;
-	}
 }
 tbody:before {
 	line-height: 1em;

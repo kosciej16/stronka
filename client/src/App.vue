@@ -3,7 +3,7 @@
 		<router-link to="/login">
 			<Tile :name="loggedInfo" />
 		</router-link>
-		<router-link to="/home">
+		<router-link to="/">
 			<Tile name="główna" />
 		</router-link>
 		<router-link to="/points">
