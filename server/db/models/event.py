@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey, Table
 
@@ -22,6 +22,7 @@ class EventModel(Base):
     type = Column(String)
     tags = Column(String)
     limit = Column(Integer)
+    private = Column(Boolean, default=False)
     description = Column(String)
 
     comments = relationship("CommentModel")

@@ -15,10 +15,14 @@ class CommentOut:
     def from_orm(cls, c):
         name = c.author.username
         if c.anonym:
-            i = random.randint(0, len(name)-1)
+            i = random.randint(0, len(name) - 1)
             name = f"{name[0:i]}*{name[i+1:]}"
         return cls(
-            c.comment_id, c.author.username, name, str(c.created_at), c.comment.replace("głupi", "")
+            c.comment_id,
+            c.author.username,
+            name,
+            str(c.created_at),
+            c.comment.replace("głupi", ""),
         )
 
 
@@ -38,6 +42,7 @@ class EventOut:
     type: t.Optional[str]
     tags: t.List[str]
     limit: t.Optional[int]
+    private: bool
     description: t.Optional[str]
     comments: t.List[CommentOut]
     users: t.List[str]
@@ -51,6 +56,7 @@ class EventOut:
             type=e.type,
             tags=e.tags.split(","),
             limit=e.limit,
+            private=e.private,
             description=e.description,
             comments=[CommentOut.from_orm(c) for c in e.comments],
             users=[u.username for u in e.users],

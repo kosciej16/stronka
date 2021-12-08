@@ -1,4 +1,6 @@
 <template>
+    <p><b>List wydarzeń</b></p>
+    Masz ochotę na konkretne wydarzenie? Chcesz się czegoś nauczyć? Poznać nową planszówkę? Nawiązać nowe znajomości? Daj znać, na pewno coś wymyślimy!<br><br>
 	<div class="overflow-x-auto overflow-y-hidden">
 		<table v-if="events.length" CELLSPACING="0" class="dense">
 			<thead>
@@ -26,10 +28,10 @@
 					<td class="cell-small border-left" v-html="signed(event)" />
 					<td>
 						<button
-							:disabled="!signedUser"
+							:disabled="!signedUser() || event.private"
 							@click="event_signin(event.event_id)"
 						>
-							{{ button_text(event.event_id) }}
+							{{ button_text(event) }}
 						</button>
 					</td>
 					<td class="cell-small border-left" v-html="event.description" />
@@ -70,20 +72,24 @@ export default {
 			return `${event.users.length}/${event.limit}`;
 		},
 		event_signin(event_id) {
-			if (this.button_text(event_id) == "WYPISZ SIĘ") {
+            var text =this.button_text(event_id) 
+			if (text == "WYPISZ SIĘ") {
 				axios_service.event_signoff(event_id).then(() => {
                     this.fetch_data()
                 })
-			} else {
+			} else if (text == "ZAPISZ SIĘ") {
 				axios_service.event_signin(event_id).then(() => {
                     this.fetch_data()
                 })
 			}
 		},
-		button_text(event_id) {
+		button_text(event) {
+            if (event.private) {
+                return "WYDARZENIE PRYWATNE"
+            }
 			for (var index in this.events) {
 				var e = this.events[index];
-				if (e.event_id == event_id) {
+				if (e.event_id == event.event_id) {
 					if (signedUser() && e.users.indexOf(signedUser().username) !== -1) {
 						return "WYPISZ SIĘ";
 					}

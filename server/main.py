@@ -18,6 +18,7 @@ e = EventModel(
     tags=["a", "b"],
     limit=4,
     description="Terra mystica to super gra jfkd fjs fsl jfsdlj fsdl fjsld jfsldj flsd fjsldj fsld jf",
+    private=True,
 )
 e2 = EventModel(
     name="Terra Mystica",
