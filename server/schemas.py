@@ -54,7 +54,7 @@ class EventOut:
             event_id=e.event_id,
             start=str(e.start),
             type=e.type,
-            tags=e.tags.split(","),
+            tags=e.tags.split(",") if e.tags else [],
             limit=e.limit,
             private=e.private,
             description=e.description,

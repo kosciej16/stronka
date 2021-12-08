@@ -10,6 +10,7 @@ import Points from './components/Points.vue'
 import Piramida from './components/Piramida.vue'
 import Plansze from './components/Plansze.vue'
 import Ranking from './components/Ranking.vue'
+import Ruch from './components/Ruch.vue'
 
 const routes = [
   { path: '/', name:'home', component: Home },
@@ -23,6 +24,7 @@ const routes = [
   { path: '/ranking', name:'ranking', component: Ranking },
   { path: '/event/piramida', name:'piramida', component: Piramida },
   { path: '/event/plansze', name:'plansze', component: Plansze },
+  { path: '/event/ruch', name:'ruchowo', component: Ruch },
 ]
 const router = createRouter({
   history: createWebHistory(),
