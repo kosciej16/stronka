@@ -15,6 +15,7 @@
 			></textarea>
 			<input type="checkbox" id="anonym" v-model="anonym" />
 			<label for="anonym">Anonimowo</label>
+            <Info msg="hmm, co się robi, żeby coś wysłać?"></Info>
 		</div>
 		<div v-else>
 			<router-link to="/login">Zaloguj się</router-link>, aby móc dodawać opinie
