@@ -1,8 +1,8 @@
 <template>
-    <p><b>List wydarzeń</b></p>
+    <p><b>Lista wydarzeń</b></p>
     Masz ochotę na konkretne wydarzenie? Chcesz się czegoś nauczyć? Poznać nową planszówkę? Nawiązać nowe znajomości? Daj znać, na pewno coś wymyślimy!<br><br>
 	<div class="overflow-x-auto overflow-y-hidden">
-		<table v-if="events.length" CELLSPACING="0" class="dense">
+		<table id="coming" v-if="events.length" CELLSPACING="0" class="dense">
 			<thead>
 				<tr>
 					<th class="cell-small">Nazwa</th>
@@ -38,6 +38,44 @@
 				</tr>
 			</tbody>
 		</table>
+
+        <p><b>Minione wydarzenia</b></p>
+		<table v-if="past_events.length" CELLSPACING="0" class="dense">
+			<thead>
+				<tr>
+					<th class="cell-small">Nazwa</th>
+					<th class="cell-small">Data</th>
+					<th class="cell-small">Godzina</th>
+					<th class="cell-small">Rodzaj</th>
+					<th class="cell-small">Zapisani</th>
+					<th></th>
+					<th class="cell-small">Opis</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(event, index) in past_events" :key="index">
+					<td class="cell-small" v-html="event.name" />
+					<td class="cell-small" v-html="getDateStringShort(event.start)" />
+					<td
+						class="cell-small border-left"
+						v-html="getTimeStringShort(event.start)"
+					/>
+					<router-link class="cell-small" id="link" :to="`/event/${event.type}`">
+						<td class="cell-small border-left" v-html="event.type" />
+					</router-link>
+					<td class="cell-small border-left" v-html="signed(event)" />
+					<td>
+						<button
+							:disabled="!signedUser() || event.private"
+							@click="event_signin(event.event_id)"
+						>
+							{{ button_text(event) }}
+						</button>
+					</td>
+					<td class="cell-small border-left" v-html="event.description" />
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </template>
 
@@ -51,6 +89,7 @@ export default {
 	data() {
 		return {
 			events: [],
+			past_events: [],
 		};
 	},
 	mounted() {
@@ -62,7 +101,8 @@ export default {
 		signedUser,
         fetch_data() {
             axios_service.get_events().then(({ data }) => {
-                this.events = data;
+                this.events = data["fut"];
+                this.past_events = data["past"];
             });
         },
 		signed(event) {
@@ -124,6 +164,13 @@ tbody:before {
 	line-height: 1em;
 	content: "\200C";
 	display: block;
+}
+line {
+      border: 200px solid red;
+
+}
+#coming {
+    margin-bottom: 5em;
 }
 </style>
 

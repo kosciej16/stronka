@@ -4,8 +4,8 @@
 		<p>name: <input v-model="name" /></p>
 		<p>ema <input v-model="ema" /></p>
 		<p>il: <input v-model="il" /></p>
-		<p>p <input v-model="p" /></p>
-		<p>ass: <input v-model="ass" /></p>
+		<p>h <input v-model="p" /></p>
+		<p>asło: <input v-model="ass" /></p>
         <div v-if="error">
             <p> {{ error[0] }} </p>
             <div v-for="e in error.slice(1)" :key="e">

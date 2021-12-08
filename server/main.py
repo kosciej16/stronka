@@ -3,7 +3,7 @@ from db.models.user import UserModel
 from db.models.event import EventModel, association_table
 from db.models.comment import CommentModel
 from db.models.point import PointModel
-from datetime import datetime
+from datetime import datetime, timedelta
 
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
@@ -22,7 +22,23 @@ e = EventModel(
 )
 e2 = EventModel(
     name="Terra Mystica",
-    start=datetime.now(),
+    start=datetime.now() + timedelta(days=1),
+    type="plansze",
+    tags=["a", "b"],
+    limit=4,
+    description="Terra mystica to super gra jfkd fjs fsl jfsdlj fsdl fjsld jfsldj flsd fjsldj fsld jf",
+)
+e3 = EventModel(
+    name="Terra Mystica",
+    start=datetime.now() - timedelta(days=1),
+    type="plansze",
+    tags=["a", "b"],
+    limit=4,
+    description="Terra mystica to super gra jfkd fjs fsl jfsdlj fsdl fjsld jfsldj flsd fjsldj fsld jf",
+)
+e4 = EventModel(
+    name="Terra Mystica",
+    start=datetime.now() + timedelta(days=2),
     type="plansze",
     tags=["a", "b"],
     limit=4,
@@ -30,6 +46,8 @@ e2 = EventModel(
 )
 s.add(e)
 s.add(e2)
+s.add(e3)
+s.add(e4)
 s.add(u)
 s.add(u2)
 s.commit()

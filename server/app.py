@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from datetime import datetime
 import re
 import typing as t
 from fastapi.exceptions import HTTPException
@@ -32,13 +33,18 @@ def get_user(name, db):
     return user
 
 
-@app.get("/event", response_model=t.List[EventOut])
+@app.get("/event")
 def get_events(db: Session = Depends(get_db)):
-    res = []
+    past, fut = [], []
     events = db.query(EventModel).all()
     for e in events:
-        res.append(EventOut.from_orm(e))
-    return res
+        if e.start > datetime.now():
+            fut.append(EventOut.from_orm(e))
+        else:
+            past.append(EventOut.from_orm(e))
+    fut.sort(key=lambda e: e.start)
+    past.sort(key=lambda e: e.start, reverse=True)
+    return {"past": past, "fut": fut}
 
 
 @app.get("/comment", response_model=t.List[CommentOut])
