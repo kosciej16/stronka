@@ -117,7 +117,8 @@ def sign_off_event(event_id: int, user_id: int, db: Session = Depends(get_db)):
 @app.post("/login", response_model=UserOut)
 def login(data: UserIn, db: Session = Depends(get_db)):
     user = get_user(data.username, db)
-    if user:
+    if user and user.password == data.password:
+        print("AAA")
         return UserOut(user_id=user.user_id, username=user.username)
     raise HTTPException(403)
 

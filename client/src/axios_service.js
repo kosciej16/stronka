@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const instance = axios.create({
-    // baseURL: 'http://127.0.0.1:8002/',
-    baseURL: 'http://176.119.35.227:8002/',
+    baseURL: 'http://127.0.0.1:8002/',
+    // baseURL: 'http://176.119.35.227:8002/',
     timeout: 5000,
     headers: {'Content-Type': 'application/json'},
 
@@ -10,11 +10,7 @@ const instance = axios.create({
 
 export default {
 	auth_login(username, pass) {
-        return instance.post("/login", {"username": username, "password": pass}).then((data) => {
-            localStorage.setItem("user", JSON.stringify({"username": username, "user_id": data.data.user_id}))
-        }).catch(error => {
-            console.log(error)
-        })
+        return instance.post("/login", {"username": username, "password": pass})
 	},
 	auth_register(data) {
         console.log(data)

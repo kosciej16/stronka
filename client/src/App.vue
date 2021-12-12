@@ -1,8 +1,11 @@
 <template>
 	<div class="container">
-		<router-link to="/login">
-			<Tile :name="loggedInfo" />
+		<router-link v-if="!username" to="/login">
+			<Tile name="Zaloguj" />
 		</router-link>
+		<a id="logout" v-else :onclick="logout">
+			<Tile name="Wyloguj" />
+		</a>
 		<router-link to="/">
 			<Tile name="główna" />
 		</router-link>
@@ -24,7 +27,8 @@
 	</div>
 	<div class="vl"></div>
 	<div class="main">
-		<router-view />
+		<p id="user_header" v-if="username">Witaj {{ username }}</p>
+		<router-view v-on:login="login" />
 	</div>
 </template>
 
@@ -34,6 +38,7 @@ import Kontakt from "./components/Kontakt.vue";
 import About from "./components/About.vue";
 import Tile from "./components/Tile.vue";
 import Events from "./components/Events.vue";
+import { signedUser } from "./utils/auth";
 
 export default {
 	name: "App",
@@ -42,20 +47,38 @@ export default {
 		Kontakt,
 		About,
 		Tile,
-        Events,
+		Events,
 	},
 	data() {
 		return {
-			var: 0,
+			username: null,
 		};
 	},
+    mounted() {
+        var user = signedUser()
+        if (user){
+            this.username = user.username
+        }
+        else  {
+            this.username = null
+        }
+    },
 	computed: {
 		loggedInfo() {
-			var som = JSON.parse(localStorage.getItem("user"));
-			if (som == null) {
-                return "zaloguj";
+			if (this.username == null) {
+				return "Zaloguj";
 			}
-            return "Witaj " + som["username"];
+			return "Wyloguj";
+		},
+	},
+	methods: {
+		login(username) {
+			console.log("WORK");
+			this.username = username;
+		},
+		logout() {
+			localStorage.removeItem("user");
+			this.username = null;
 		},
 	},
 };
@@ -63,7 +86,7 @@ export default {
 
 <style scoped>
 .container {
-    width: 15em;
+	width: 15em;
 	float: left;
 	display: grid;
 	grid-template-columns: auto auto;
@@ -80,6 +103,15 @@ export default {
 	float: left;
 	border-left: 6px solid green;
 	height: 500px;
-    width: 0;
+	width: 0;
+}
+#user_header {
+	font-family: Cursive;
+	position: absolute;
+	right: 4em;
+	top: 1em;
+}
+#logout {
+	cursor: pointer;
 }
 </style>
