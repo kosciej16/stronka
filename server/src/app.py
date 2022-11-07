@@ -6,17 +6,18 @@ from fastapi.exceptions import HTTPException
 from starlette.responses import HTMLResponse
 import uvicorn
 from fastapi import FastAPI, Depends, Body
-from sqlalchemy import func
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from db import get_db
-from db.models.comment import CommentModel
 from db.models.event import EventModel, association_table
 from db.models.user import UserModel
-from schemas import CommentIn, CommentOut, EventOut, UserIn, UserOut
+from queries.user import get_user
+from routers.comment import comment_router
+from old_schemas import EventOut, UserIn, UserOut
 
 app = FastAPI()
+app.include_router(comment_router, prefix="/api/v1/comment")
 origins = ["*"]
 
 app.add_middleware(
@@ -26,11 +27,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-def get_user(name, db):
-    user = db.query(UserModel).filter(name.lower() == func.lower(UserModel.username)).first()
-    return user
 
 
 @app.get("/event")
@@ -45,39 +41,6 @@ def get_events(db: Session = Depends(get_db)):
     fut.sort(key=lambda e: e.start)
     past.sort(key=lambda e: e.start, reverse=True)
     return {"past": past, "fut": fut}
-
-
-@app.get("/comment", response_model=t.List[CommentOut])
-def get_comments(db: Session = Depends(get_db)):
-    res = []
-    comments = (
-        db.query(CommentModel)
-        .filter_by(deleted=False)
-        .order_by(CommentModel.created_at.desc())
-        .all()
-    )
-    for c in comments:
-        res.append(CommentOut.from_orm(c))
-    return res
-
-
-@app.post("/comment", response_model=t.List[CommentOut])
-def add_comment(c: CommentIn, db: Session = Depends(get_db)):
-    user = get_user(c.author_name, db)
-    db.add(
-        CommentModel(
-            author_id=user.user_id, comment=c.comment, event_id=c.event_id, anonym=c.anonym
-        )
-    )
-    db.commit()
-
-
-@app.delete("/comment/{comment_id}")
-def delete_comment(comment_id: int, db: Session = Depends(get_db)):
-    res = db.query(CommentModel).filter_by(comment_id=comment_id).first()
-    print(res)
-    res.deleted = True
-    db.commit()
 
 
 @app.get("/event/{event_id}", response_model=EventOut)
