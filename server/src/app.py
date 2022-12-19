@@ -1,9 +1,6 @@
 from dataclasses import asdict
-from datetime import datetime
 import re
-import typing as t
 from fastapi.exceptions import HTTPException
-from starlette.responses import HTMLResponse
 import uvicorn
 from fastapi import FastAPI, Depends, Body
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,11 +10,14 @@ from db import get_db
 from db.models.event import EventModel, association_table
 from db.models.user import UserModel
 from queries.user import get_user
+from routers.event import event_router
 from routers.comment import comment_router
-from old_schemas import EventOut, UserIn, UserOut
+from old_schemas import UserIn, UserOut
+from schemas.event import EventOut
 
 app = FastAPI()
 app.include_router(comment_router, prefix="/api/v1/comment")
+app.include_router(event_router, prefix="/api/v1/event")
 origins = ["*"]
 
 app.add_middleware(
@@ -28,27 +28,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.get("/event")
-def get_events(db: Session = Depends(get_db)):
-    past, fut = [], []
-    events = db.query(EventModel).all()
-    for e in events:
-        if e.start > datetime.now():
-            fut.append(EventOut.from_orm(e))
-        else:
-            past.append(EventOut.from_orm(e))
-    fut.sort(key=lambda e: e.start)
-    past.sort(key=lambda e: e.start, reverse=True)
-    return {"past": past, "fut": fut}
-
-
-@app.get("/event/{event_id}", response_model=EventOut)
-def get_event(event_id: int, db: Session = Depends(get_db)):
-    e = db.query(EventModel).filter_by(event_id=event_id).first()
-    if e:
-        return EventOut.from_orm(e)
-    raise HTTPException(404)
 
 
 @app.post("/event/{event_id}", response_model=EventOut)
